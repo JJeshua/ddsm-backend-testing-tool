@@ -8,7 +8,7 @@ To set up the environment, follow these steps:
 
 2. **Clone the Repository**: Clone this repository to your local machine using Git:
 ```bash
-git clone [https://github.com/your-username/your-repository.git](https://github.com/JJeshua/ddsm-backend-testing-tool.git)
+git clone https://github.com/JJeshua/ddsm-backend-testing-tool.git
 ```
 3. **Navigate to the Repository Directory**: Move into the directory of the cloned repository:
 ```bash
