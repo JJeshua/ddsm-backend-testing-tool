@@ -21,7 +21,7 @@ conda env create -f environment.yml
   This will create a new environment named your-environment-name with all the required dependencies installed.
 5. **Activate the Environment**: Activate the newly created environment:
 ```bash
-conda activate your-environment-name
+conda activate APITesting
 ```
 6. **Verify Installation**: You can verify that the environment was installed correctly by running:
 ```bash
