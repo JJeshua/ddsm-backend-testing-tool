@@ -18,7 +18,8 @@ cd ddsm-backend-testing-tool
 ```bash
 conda env create -f environment.yml
 ```
-  This will create a new environment named your-environment-name with all the required dependencies installed.
+This will create a new environment named APITesting with all the required dependencies installed.
+
 5. **Activate the Environment**: Activate the newly created environment:
 ```bash
 conda activate APITesting
