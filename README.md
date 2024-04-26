@@ -33,3 +33,18 @@ conda env list
 ```bash
 conda deactivate
 ```
+# Running Tests with Pytest
+
+This repository uses Pytest for testing. You can run all tests easily using the `pytest` command.
+
+To run all tests, follow these steps:
+
+1. **Activate the Conda Environment**: Before running the tests, ensure that you have activated the Conda environment created for this project. If you haven't activated it yet, you can do so by running:
+```bash
+conda activate APITesting
+```
+2. **Navigate to the Project Root Directory**: CD to the root directory **ddsm-backend-testing-tool**.
+3. **Run Pytest**: Once you're in the tests directory, simply run the following command to execute all tests:
+  ```bash
+  pytest
+  ```
