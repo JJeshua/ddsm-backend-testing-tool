@@ -48,3 +48,13 @@ conda activate APITesting
   ```bash
   pytest
   ```
+# Using the DB Tools
+## Usage
+1. **Navigate to the root directory**: CD the root directory of ddsm-backend-testing-tool
+2. **Run the Script**: Execute the script using Python:
+```bash
+python db_tools.py [action]
+```
+3. **Available Actions**:
+* populate: This action populates the database with sample data.
+* clear: This action clears the entire database.
