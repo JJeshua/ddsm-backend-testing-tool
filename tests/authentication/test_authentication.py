@@ -2,10 +2,11 @@ import pytest
 import requests
 from faker import Faker
 
+from constants.constants import BASE_URL
+
 
 class TestAuthentication:
     fake = Faker()
-    BASE_URL = "http://localhost:8080"
 
     @pytest.fixture(scope="module")
     def session(self):
@@ -16,7 +17,6 @@ class TestAuthentication:
     @pytest.fixture(scope="module")
     def shared_variables(self, session):
         shared_data = {
-            "BASE_URL": self.BASE_URL,
             "email": self.fake.email(),
             "password": self.fake.password(),
             "username": self.fake.user_name(),
@@ -27,7 +27,7 @@ class TestAuthentication:
         return shared_data
 
     def test_valid_register(self, shared_variables, session):
-        url = f"{shared_variables['BASE_URL']}/auth/register"
+        url = f"{BASE_URL}/auth/register"
         data = {
             "first_name": shared_variables["first_name"],
             "last_name": shared_variables["last_name"],
@@ -48,7 +48,7 @@ class TestAuthentication:
         ["first_name", "last_name", "username", "email", "password", "date_of_birth"],
     )
     def test_missing_register_field(self, shared_variables, session, missing_field):
-        url = f"{shared_variables['BASE_URL']}/auth/register"
+        url = f"{BASE_URL}/auth/register"
 
         # Create data dictionary without the specified missing field
         data = {
@@ -83,7 +83,7 @@ class TestAuthentication:
         ["first_name", "last_name", "username", "email", "password", "date_of_birth"],
     )
     def test_incorrect_register_field(self, shared_variables, session, incorrect_field):
-        url = f"{shared_variables['BASE_URL']}/auth/register"
+        url = f"{BASE_URL}/auth/register"
 
         # Create data dictionary without the specified missing field
         data = {
@@ -118,7 +118,7 @@ class TestAuthentication:
         assert response.status_code == 400
 
     def test_valid_login(self, shared_variables, session):
-        url = f"{shared_variables['BASE_URL']}/auth/login"
+        url = f"{BASE_URL}/auth/login"
         data = {
             "email": shared_variables["email"],
             "password": shared_variables["password"],
