@@ -26,16 +26,15 @@ dependencies:
   - xz=5.4.6=h5eee18b_0
   - zlib=1.2.13=h5eee18b_0
   - pip:
-    - certifi==2024.2.2
-    - charset-normalizer==3.3.2
-    - faker==24.14.0
-    - idna==3.7
-    - iniconfig==2.0.0
-    - packaging==24.0
-    - pluggy==1.5.0
-    - pytest==8.1.1
-    - python-dateutil==2.9.0.post0
-    - requests==2.31.0
-    - six==1.16.0
-    - urllib3==2.2.1
-prefix: /home/freezy/anaconda3/envs/APITesting
+      - certifi==2024.2.2
+      - charset-normalizer==3.3.2
+      - faker==24.14.0
+      - idna==3.7
+      - iniconfig==2.0.0
+      - packaging==24.0
+      - pluggy==1.5.0
+      - pytest==8.1.2
+      - python-dateutil==2.9.0.post0
+      - requests==2.31.0
+      - six==1.16.0
+      - urllib3==2.2.1
