@@ -38,10 +38,21 @@ class TestAuthentication:
         }
         response = session.post(url, json=data)
 
-        if response.status_code != 200:
-            print("Error message:", response.content)
-
         assert response.status_code == 200
+
+    def test_duplicate_register(self, shared_variables, session):
+        url = f"{BASE_URL}/auth/register"
+        data = {
+            "first_name": shared_variables["first_name"],
+            "last_name": shared_variables["last_name"],
+            "username": shared_variables["username"],
+            "email": shared_variables["email"],
+            "password": shared_variables["password"],
+            "date_of_birth": shared_variables["date_of_birth"],
+        }
+        response = session.post(url, json=data)
+
+        assert response.status_code == 400
 
     @pytest.mark.parametrize(
         "missing_field",
@@ -117,6 +128,16 @@ class TestAuthentication:
 
         assert response.status_code == 400
 
+    def test_invalid_login(self, shared_variables, session):
+        url = f"{BASE_URL}/auth/login"
+        data = {
+            "email": shared_variables["email"],
+            "password": f"{shared_variables["password"]}aoeuu",
+        }
+        response = session.post(url, json=data)
+
+        assert response.status_code == 400
+
     def test_valid_login(self, shared_variables, session):
         url = f"{BASE_URL}/auth/login"
         data = {
@@ -124,9 +145,6 @@ class TestAuthentication:
             "password": shared_variables["password"],
         }
         response = session.post(url, json=data)
-
-        if response.status_code != 200:
-            print("Error message:", response.content)
 
         assert response.status_code == 200
         assert "session_token" in session.cookies
