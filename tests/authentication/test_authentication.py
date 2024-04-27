@@ -1,34 +1,12 @@
 import pytest
-import requests
-from faker import Faker
 
-from constants.constants import BASE_URL
+from tests.base_test import BaseTestClass
 
 
-class TestAuthentication:
-    fake = Faker()
-
-    @pytest.fixture(scope="module")
-    def session(self):
-        session = requests.Session()
-        yield session
-        session.close()
-
-    @pytest.fixture(scope="module")
-    def shared_variables(self, session):
-        shared_data = {
-            "email": self.fake.email(),
-            "password": self.fake.password(),
-            "username": self.fake.user_name(),
-            "first_name": self.fake.first_name(),
-            "last_name": self.fake.last_name(),
-            "date_of_birth": self.fake.date_of_birth().isoformat(),
-        }
-        return shared_data
-
+class TestAuthentication(BaseTestClass):
     def test_valid_register(self, shared_variables, session):
         EXPECTED = 200
-        url = f"{BASE_URL}/auth/register"
+        url = f"{self.BASE_URL}/auth/register"
         data = {
             "first_name": shared_variables["first_name"],
             "last_name": shared_variables["last_name"],
@@ -46,7 +24,7 @@ class TestAuthentication:
 
     def test_duplicate_register(self, shared_variables, session):
         EXPECTED = 400
-        url = f"{BASE_URL}/auth/register"
+        url = f"{self.BASE_URL}/auth/register"
         data = {
             "first_name": shared_variables["first_name"],
             "last_name": shared_variables["last_name"],
@@ -68,7 +46,7 @@ class TestAuthentication:
     )
     def test_missing_register_field(self, shared_variables, session, missing_field):
         EXPECTED = 400
-        url = f"{BASE_URL}/auth/register"
+        url = f"{self.BASE_URL}/auth/register"
 
         # Create data dictionary without the specified missing field
         data = {
@@ -107,7 +85,7 @@ class TestAuthentication:
     )
     def test_incorrect_register_field(self, shared_variables, session, incorrect_field):
         EXPECTED = 400
-        url = f"{BASE_URL}/auth/register"
+        url = f"{self.BASE_URL}/auth/register"
 
         # Create data dictionary without the specified missing field
         data = {
@@ -146,7 +124,7 @@ class TestAuthentication:
 
     def test_invalid_login(self, shared_variables, session):
         EXPECTED = 400
-        url = f"{BASE_URL}/auth/login"
+        url = f"{self.BASE_URL}/auth/login"
         data = {
             "email": shared_variables["email"],
             "password": f"{shared_variables["password"]}aoeuu",
@@ -160,7 +138,7 @@ class TestAuthentication:
 
     def test_valid_login(self, shared_variables, session):
         EXPECTED = 200
-        url = f"{BASE_URL}/auth/login"
+        url = f"{self.BASE_URL}/auth/login"
         data = {
             "email": shared_variables["email"],
             "password": shared_variables["password"],
@@ -175,7 +153,7 @@ class TestAuthentication:
     
     def test_is_authenticated(self, session):
         EXPECTED = 200
-        url = f"{BASE_URL}/auth/isAuthenticated"
+        url = f"{self.BASE_URL}/auth/isAuthenticated"
         response = session.get(url, cookies=session.cookies.get_dict())
 
         if (response.status_code != EXPECTED):
@@ -186,7 +164,7 @@ class TestAuthentication:
     
     def test_no_session_token(self, session):
         EXPECTED = 403
-        url = f"{BASE_URL}/auth/isAuthenticated"
+        url = f"{self.BASE_URL}/auth/isAuthenticated"
         response = session.get(url)
 
         if (response.status_code != EXPECTED):
@@ -196,8 +174,18 @@ class TestAuthentication:
     
     def test_invalid_session_token(self, session):
         EXPECTED = 403
-        url = f"{BASE_URL}/auth/isAuthenticated"
+        url = f"{self.BASE_URL}/auth/isAuthenticated"
         response = session.get(url, cookies={"session_token":"idksomethinginvalid"})
+
+        if (response.status_code != EXPECTED):
+            print(response.content)
+
+        assert response.status_code == EXPECTED
+    
+    def test_logout(self, session):
+        EXPECTED = 200
+        url = f"{self.BASE_URL}/auth/logout"
+        response = session.get(url, cookies=session.cookies.get_dict())
 
         if (response.status_code != EXPECTED):
             print(response.content)
