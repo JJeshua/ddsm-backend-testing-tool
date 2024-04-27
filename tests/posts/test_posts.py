@@ -54,3 +54,33 @@ class TestPosts(BaseTestClass):
         assert response.status_code == 404, self.buildErrorMessage(
             response.status_code, response.status_code
         )
+
+    def test_get_post_no_id(self, session):
+        url = f"{self.BASE_URL}/posts"
+        response = session.get(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 404, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
+    
+    def test_like_post(self, shared_variables, session):
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/like"
+        response = session.post(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 201, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
+
+
+    def test_double_like_post(self, shared_variables, session):
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/like"
+        response = session.post(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
+
+
+    def test_like_invalid_post(self, session):
+        url = f"{self.BASE_URL}/posts/invalidpostid/like"
+        response = session.post(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 404, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
