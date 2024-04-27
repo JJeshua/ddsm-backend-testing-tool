@@ -21,7 +21,17 @@ class TestPosts(BaseTestClass):
 
         assert response.status_code == EXPECTED
 
-    def test_get_post(self, shared_variables, session):
+    def test_create_invalid_post(self, session):
+        EXPECTED = 400
+        url = f"{self.BASE_URL}/posts"
+        response = session.post(url, cookies=session.cookies.get_dict())
+
+        if response.status_code != EXPECTED:
+            print(response.content)
+
+        assert response.status_code == EXPECTED
+
+    def test_get_valid_post(self, shared_variables, session):
         EXPECTED = 200
 
         url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}"
@@ -31,3 +41,25 @@ class TestPosts(BaseTestClass):
             print(response.content)
 
         assert response.status_code == EXPECTED
+    
+    def test_get_invalid_post(self, session):
+            EXPECTED = 404
+
+            url = f"{self.BASE_URL}/posts/invalidpostID"
+            response = session.get(url, cookies=session.cookies.get_dict())
+
+            if response.status_code != EXPECTED:
+                print(response.content)
+
+            assert response.status_code == EXPECTED
+
+    def test_get_post_no_id(self, session):
+            EXPECTED = 404
+
+            url = f"{self.BASE_URL}/posts"
+            response = session.get(url, cookies=session.cookies.get_dict())
+
+            if response.status_code != EXPECTED:
+                print(response.content)
+
+            assert response.status_code == EXPECTED
