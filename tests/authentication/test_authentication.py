@@ -193,3 +193,13 @@ class TestAuthentication:
             print(response.content)
 
         assert response.status_code == EXPECTED
+    
+    def test_invalid_session_token(self, session):
+        EXPECTED = 403
+        url = f"{BASE_URL}/auth/isAuthenticated"
+        response = session.get(url, cookies={"session_token":"idksomethinginvalid"})
+
+        if (response.status_code != EXPECTED):
+            print(response.content)
+
+        assert response.status_code == EXPECTED
