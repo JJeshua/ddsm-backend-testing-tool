@@ -5,7 +5,6 @@ from tests.base_test import BaseTestClass
 
 
 class TestPosts(BaseTestClass):
-
     def test_create_post(self, shared_variables, session):
         self.register(shared_variables, session)
         self.login(shared_variables, session)
