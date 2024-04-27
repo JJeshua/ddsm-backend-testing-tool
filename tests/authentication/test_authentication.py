@@ -5,7 +5,6 @@ from tests.base_test import BaseTestClass
 
 class TestAuthentication(BaseTestClass):
     def test_valid_register(self, shared_variables, session):
-        EXPECTED = 200
         url = f"{self.BASE_URL}/auth/register"
         data = {
             "first_name": shared_variables["first_name"],
@@ -17,13 +16,12 @@ class TestAuthentication(BaseTestClass):
         }
         response = session.post(url, json=data)
 
-        if (response.status_code != EXPECTED):
-            print(response.content)
 
-        assert response.status_code == EXPECTED
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
 
     def test_duplicate_register(self, shared_variables, session):
-        EXPECTED = 400
         url = f"{self.BASE_URL}/auth/register"
         data = {
             "first_name": shared_variables["first_name"],
@@ -35,17 +33,15 @@ class TestAuthentication(BaseTestClass):
         }
         response = session.post(url, json=data)
 
-        if (response.status_code != EXPECTED):
-            print(response.content)
-
-        assert response.status_code == EXPECTED
+        assert response.status_code == 400, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
 
     @pytest.mark.parametrize(
         "missing_field",
         ["first_name", "last_name", "username", "email", "password", "date_of_birth"],
     )
     def test_missing_register_field(self, shared_variables, session, missing_field):
-        EXPECTED = 400
         url = f"{self.BASE_URL}/auth/register"
 
         # Create data dictionary without the specified missing field
@@ -74,17 +70,15 @@ class TestAuthentication(BaseTestClass):
 
         response = session.post(url, json=data)
 
-        if (response.status_code != EXPECTED):
-            print(response.content)
-
-        assert response.status_code == EXPECTED
+        assert response.status_code == 400, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
 
     @pytest.mark.parametrize(
         "incorrect_field",
         ["first_name", "last_name", "username", "email", "password", "date_of_birth"],
     )
     def test_incorrect_register_field(self, shared_variables, session, incorrect_field):
-        EXPECTED = 400
         url = f"{self.BASE_URL}/auth/register"
 
         # Create data dictionary without the specified missing field
@@ -117,13 +111,11 @@ class TestAuthentication(BaseTestClass):
 
         response = session.post(url, json=data)
 
-        if (response.status_code != EXPECTED):
-            print(response.content)
-
-        assert response.status_code == EXPECTED
+        assert response.status_code == 400, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
 
     def test_invalid_login(self, shared_variables, session):
-        EXPECTED = 400
         url = f"{self.BASE_URL}/auth/login"
         data = {
             "email": shared_variables["email"],
@@ -131,13 +123,11 @@ class TestAuthentication(BaseTestClass):
         }
         response = session.post(url, json=data)
 
-        if (response.status_code != EXPECTED):
-            print(response.content)
-
-        assert response.status_code == EXPECTED
+        assert response.status_code == 400, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
 
     def test_valid_login(self, shared_variables, session):
-        EXPECTED = 200
         url = f"{self.BASE_URL}/auth/login"
         data = {
             "email": shared_variables["email"],
@@ -145,60 +135,53 @@ class TestAuthentication(BaseTestClass):
         }
         response = session.post(url, json=data)
 
-        if (response.status_code != EXPECTED):
-            print(response.content)
-
-        assert response.status_code == EXPECTED
-        assert "session_token" in session.cookies
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
+        assert "session_token" in session.cookies, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
     
     def test_is_authenticated(self, session):
-        EXPECTED = 200
         url = f"{self.BASE_URL}/auth/isAuthenticated"
         response = session.get(url, cookies=session.cookies.get_dict())
 
-        if (response.status_code != EXPECTED):
-            print(response.content)
-
-        assert response.status_code == EXPECTED
-        assert "session_token" in session.cookies
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
+        assert "session_token" in session.cookies, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
     
     def test_no_session_token(self, session):
-        EXPECTED = 403
         url = f"{self.BASE_URL}/auth/isAuthenticated"
         response = session.get(url)
 
-        if (response.status_code != EXPECTED):
-            print(response.content)
-
-        assert response.status_code == EXPECTED
+        assert response.status_code == 403, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
     
     def test_invalid_session_token(self, session):
-        EXPECTED = 403
         url = f"{self.BASE_URL}/auth/isAuthenticated"
         response = session.get(url, cookies={"session_token":"idksomethinginvalid"})
 
-        if (response.status_code != EXPECTED):
-            print(response.content)
-
-        assert response.status_code == EXPECTED
+        assert response.status_code == 403, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
     
     def test_logout(self, session):
-        EXPECTED = 200
         url = f"{self.BASE_URL}/auth/logout"
         response = session.get(url, cookies=session.cookies.get_dict())
 
-        if (response.status_code != EXPECTED):
-            print(response.content)
-
-        assert response.status_code == EXPECTED
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )
     
 
     def test_session_token_invalidated(self, session):
-        EXPECTED = 403
         url = f"{self.BASE_URL}/auth/isAuthenticated"
         response = session.get(url, cookies=session.cookies.get_dict())
 
-        if (response.status_code != EXPECTED):
-            print(response.content)
-
-        assert response.status_code == EXPECTED
+        assert response.status_code == 403, self.buildErrorMessage(
+            response.status_code, response.status_code
+        )

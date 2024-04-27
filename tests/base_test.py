@@ -54,3 +54,6 @@ class BaseTestClass:
 
         if response.status_code != EXPECTED:
             print(response.content)
+
+    def buildErrorMessage(self, response_status_code, response_content):
+        return f"Unexpected status code: {response_status_code}. Response content: {response_content}"    
