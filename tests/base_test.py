@@ -3,7 +3,6 @@ import requests
 from faker import Faker
 
 
-
 class BaseTestClass:
     fake = Faker()
     BASE_URL = "http://localhost:8080"
