@@ -139,3 +139,63 @@ class TestPosts(BaseTestClass):
         assert response.status_code == 404, self.buildErrorMessage(
             response.status_code, response.content
         )
+    
+    def test_delete_comment_valid(self, shared_variables, session):   
+        pass
+
+    def test_delete_comment_invalid_comment_id(self, shared_variables, session):   
+        pass
+
+    def test_delete_comment_not_comment_owner(self, shared_variables, session):   
+        pass
+    
+    def test_archive_post_valid(self, shared_variables, session):   
+        pass
+
+    def test_archive_post_invalid_post_id(self, shared_variables, session):   
+        pass
+
+    def test_archive_post_not_post_owner(self, shared_variables, session):   
+        pass
+
+    def test_unarchive_post_valid(self, shared_variables, session):   
+        pass
+
+    def test_unarchive_post_invalid_post_id(self, shared_variables, session):   
+        pass
+
+    def test_unarchive_post_not_post_owner(self, shared_variables, session):   
+        pass
+
+    def test_get_likes_valid(self, shared_variables, session):   
+        pass
+
+    def test_get_likes_invalid_post_id(self, shared_variables, session):   
+        pass
+    
+    def test_get_likes_invalid_lim(self, shared_variables, session):   
+        pass
+
+    def test_get_likes_invalid_step(self, shared_variables, session):   
+        pass
+
+    def test_get_comments_valid(self, shared_variables, session):   
+        pass
+
+    def test_get_commments_invalid_post_id(self, shared_variables, session):   
+        pass
+    
+    def test_get_commments_invalid_lim(self, shared_variables, session):   
+        pass
+
+    def test_get_commments_invalid_step(self, shared_variables, session):   
+        pass
+
+    def test_delete_post_valid(self, shared_variables, session):   
+        pass
+
+    def test_delete_post_invalid_post_id(self, shared_variables, session):   
+        pass
+
+    def test_delete_post_not_post_owner(self, shared_variables, session):   
+        pass
