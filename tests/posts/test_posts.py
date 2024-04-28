@@ -85,7 +85,7 @@ class TestPosts(BaseTestClass):
             response.status_code, response.content
         )
 
-    def test_update_post(self, shared_variables, session):
+    def test_valid_update_post(self, shared_variables, session):
         url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}"
         new_content = {"post_content": self.fake.sentence()}
 
@@ -101,5 +101,23 @@ class TestPosts(BaseTestClass):
         content = json.loads(response.content)
 
         assert content["post_content"] != shared_variables["post_content"], self.buildErrorMessage(
+            response.status_code, response.content
+        )
+    
+    def test_no_content_update_post(self, shared_variables, session):
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}"
+
+        response = session.put(url, cookies=session.cookies.get_dict())
+
+        assert response.status_code == 400, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+    
+    def test_invalid_post_id_update_post(self, session):
+        url = f"{self.BASE_URL}/posts/invalidPostId"
+
+        response = session.put(url, cookies=session.cookies.get_dict())
+
+        assert response.status_code == 404, self.buildErrorMessage(
             response.status_code, response.content
         )
