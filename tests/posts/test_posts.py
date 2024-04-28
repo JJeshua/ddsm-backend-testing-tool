@@ -121,3 +121,28 @@ class TestPosts(BaseTestClass):
         assert response.status_code == 404, self.buildErrorMessage(
             response.status_code, response.content
         )
+    
+    def test_create_valid_comment_on_post(self, shared_variables, session):
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment"
+        data = {"comment_content": self.fake.sentence()}
+        response = session.post(url, json=data,cookies=session.cookies.get_dict())
+
+        assert response.status_code == 201, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+
+    def test_no_content_create_comment_on_post(self, shared_variables, session):
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment"
+        response = session.post(url, cookies=session.cookies.get_dict())
+
+        assert response.status_code == 400, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+    
+    def test_create_comment_on_post(self, shared_variables, session):
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment"
+        response = session.post(url, cookies=session.cookies.get_dict())
+
+        assert response.status_code == 400, self.buildErrorMessage(
+            response.status_code, response.content
+        )
