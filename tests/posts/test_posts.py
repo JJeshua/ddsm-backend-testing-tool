@@ -19,14 +19,14 @@ class TestPosts(BaseTestClass):
             response.status_code, response.content
         )
 
-    def test_create_invalid_post(self, session):
+    def test_create_post_invalid_post_content(self, session):
         url = f"{self.BASE_URL}/posts"
         response = session.post(url, cookies=session.cookies.get_dict())
         assert response.status_code == 400, self.buildErrorMessage(
             response.status_code, response.content
         )
 
-    def test_get_valid_post(self, shared_variables, session):
+    def test_get_post_valid(self, shared_variables, session):
         url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}"
         response = session.get(url, cookies=session.cookies.get_dict())
         assert response.status_code == 200, self.buildErrorMessage(
@@ -41,15 +41,8 @@ class TestPosts(BaseTestClass):
             ObjectId(data["_id"]) == shared_variables["current_post_id"]
         ), self.buildErrorMessage(response.status_code, response.status_code)
 
-    def test_get_invalid_post(self, session):
+    def test_get_post_invalid(self, session):
         url = f"{self.BASE_URL}/posts/invalidpostID"
-        response = session.get(url, cookies=session.cookies.get_dict())
-        assert response.status_code == 404, self.buildErrorMessage(
-            response.status_code, response.content
-        )
-
-    def test_get_post_no_id(self, session):
-        url = f"{self.BASE_URL}/posts"
         response = session.get(url, cookies=session.cookies.get_dict())
         assert response.status_code == 404, self.buildErrorMessage(
             response.status_code, response.content
@@ -70,7 +63,7 @@ class TestPosts(BaseTestClass):
         )
 
 
-    def test_double_like_post(self, shared_variables, session):
+    def test_like_post_double_like(self, shared_variables, session):
         url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/like"
         response = session.post(url, cookies=session.cookies.get_dict())
         assert response.status_code == 200, self.buildErrorMessage(
@@ -78,14 +71,14 @@ class TestPosts(BaseTestClass):
         )
 
 
-    def test_like_invalid_post(self, session):
+    def test_like_post_invalid_post_id(self, session):
         url = f"{self.BASE_URL}/posts/invalidpostid/like"
         response = session.post(url, cookies=session.cookies.get_dict())
         assert response.status_code == 404, self.buildErrorMessage(
             response.status_code, response.content
         )
 
-    def test_valid_update_post(self, shared_variables, session):
+    def test_update_post_valid(self, shared_variables, session):
         url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}"
         new_content = {"post_content": self.fake.sentence()}
 
@@ -104,7 +97,7 @@ class TestPosts(BaseTestClass):
             response.status_code, response.content
         )
     
-    def test_no_content_update_post(self, shared_variables, session):
+    def test_update_post_no_content(self, shared_variables, session):
         url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}"
 
         response = session.put(url, cookies=session.cookies.get_dict())
@@ -113,7 +106,7 @@ class TestPosts(BaseTestClass):
             response.status_code, response.content
         )
     
-    def test_invalid_post_id_update_post(self, session):
+    def test_update_post_invalid_post_id(self, session):
         url = f"{self.BASE_URL}/posts/invalidPostId"
 
         response = session.put(url, cookies=session.cookies.get_dict())
@@ -122,7 +115,7 @@ class TestPosts(BaseTestClass):
             response.status_code, response.content
         )
     
-    def test_create_valid_comment_on_post(self, shared_variables, session):
+    def test_create_comment_valid(self, shared_variables, session):
         url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment"
         data = {"comment_content": self.fake.sentence()}
         response = session.post(url, json=data,cookies=session.cookies.get_dict())
@@ -131,7 +124,7 @@ class TestPosts(BaseTestClass):
             response.status_code, response.content
         )
 
-    def test_no_content_create_comment_on_post(self, shared_variables, session):
+    def test_create_comment_no_content(self, shared_variables, session):
         url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment"
         response = session.post(url, cookies=session.cookies.get_dict())
 
@@ -139,10 +132,10 @@ class TestPosts(BaseTestClass):
             response.status_code, response.content
         )
     
-    def test_create_comment_on_post(self, shared_variables, session):
-        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment"
+    def test_create_comment_invalid_post_id(self, shared_variables, session):
+        url = f"{self.BASE_URL}/posts/invalidPostId/comment"
         response = session.post(url, cookies=session.cookies.get_dict())
 
-        assert response.status_code == 400, self.buildErrorMessage(
+        assert response.status_code == 404, self.buildErrorMessage(
             response.status_code, response.content
         )

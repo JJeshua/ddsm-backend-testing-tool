@@ -4,7 +4,7 @@ from tests.base_test import BaseTestClass
 
 
 class TestAuthentication(BaseTestClass):
-    def test_valid_register(self, shared_variables, session):
+    def test_register_valid(self, shared_variables, session):
         url = f"{self.BASE_URL}/auth/register"
         data = {
             "first_name": shared_variables["first_name"],
@@ -21,7 +21,7 @@ class TestAuthentication(BaseTestClass):
             response.status_code, response.content
         )
 
-    def test_duplicate_register(self, shared_variables, session):
+    def test_register_duplicate_user(self, shared_variables, session):
         url = f"{self.BASE_URL}/auth/register"
         data = {
             "first_name": shared_variables["first_name"],
@@ -41,7 +41,7 @@ class TestAuthentication(BaseTestClass):
         "missing_field",
         ["first_name", "last_name", "username", "email", "password", "date_of_birth"],
     )
-    def test_missing_register_field(self, shared_variables, session, missing_field):
+    def test_register_missing_field(self, shared_variables, session, missing_field):
         url = f"{self.BASE_URL}/auth/register"
 
         # Create data dictionary without the specified missing field
@@ -78,7 +78,7 @@ class TestAuthentication(BaseTestClass):
         "incorrect_field",
         ["first_name", "last_name", "username", "email", "password", "date_of_birth"],
     )
-    def test_incorrect_register_field(self, shared_variables, session, incorrect_field):
+    def test_register_incorrect_field(self, shared_variables, session, incorrect_field):
         url = f"{self.BASE_URL}/auth/register"
 
         # Create data dictionary without the specified missing field
@@ -115,7 +115,7 @@ class TestAuthentication(BaseTestClass):
             response.status_code, response.content
         )
 
-    def test_invalid_login(self, shared_variables, session):
+    def test_login_invalid(self, shared_variables, session):
         url = f"{self.BASE_URL}/auth/login"
         data = {
             "email": shared_variables["email"],
@@ -127,7 +127,7 @@ class TestAuthentication(BaseTestClass):
             response.status_code, response.content
         )
 
-    def test_valid_login(self, shared_variables, session):
+    def test_login_valid(self, shared_variables, session):
         url = f"{self.BASE_URL}/auth/login"
         data = {
             "email": shared_variables["email"],
@@ -153,7 +153,7 @@ class TestAuthentication(BaseTestClass):
             response.status_code, response.content
         )
     
-    def test_no_session_token(self, session):
+    def test_session_token_no_session_token(self, session):
         url = f"{self.BASE_URL}/auth/isAuthenticated"
         response = session.get(url)
 
@@ -161,7 +161,7 @@ class TestAuthentication(BaseTestClass):
             response.status_code, response.content
         )
     
-    def test_invalid_session_token(self, session):
+    def test_session_token_invalid(self, session):
         url = f"{self.BASE_URL}/auth/isAuthenticated"
         response = session.get(url, cookies={"session_token":"idksomethinginvalid"})
 
