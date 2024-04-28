@@ -18,7 +18,7 @@ class TestAuthentication(BaseTestClass):
 
 
         assert response.status_code == 200, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
 
     def test_duplicate_register(self, shared_variables, session):
@@ -34,7 +34,7 @@ class TestAuthentication(BaseTestClass):
         response = session.post(url, json=data)
 
         assert response.status_code == 400, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
 
     @pytest.mark.parametrize(
@@ -71,7 +71,7 @@ class TestAuthentication(BaseTestClass):
         response = session.post(url, json=data)
 
         assert response.status_code == 400, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
 
     @pytest.mark.parametrize(
@@ -112,7 +112,7 @@ class TestAuthentication(BaseTestClass):
         response = session.post(url, json=data)
 
         assert response.status_code == 400, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
 
     def test_invalid_login(self, shared_variables, session):
@@ -124,7 +124,7 @@ class TestAuthentication(BaseTestClass):
         response = session.post(url, json=data)
 
         assert response.status_code == 400, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
 
     def test_valid_login(self, shared_variables, session):
@@ -136,10 +136,10 @@ class TestAuthentication(BaseTestClass):
         response = session.post(url, json=data)
 
         assert response.status_code == 200, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
         assert "session_token" in session.cookies, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
     
     def test_is_authenticated(self, session):
@@ -147,10 +147,10 @@ class TestAuthentication(BaseTestClass):
         response = session.get(url, cookies=session.cookies.get_dict())
 
         assert response.status_code == 200, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
         assert "session_token" in session.cookies, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
     
     def test_no_session_token(self, session):
@@ -158,7 +158,7 @@ class TestAuthentication(BaseTestClass):
         response = session.get(url)
 
         assert response.status_code == 403, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
     
     def test_invalid_session_token(self, session):
@@ -166,7 +166,7 @@ class TestAuthentication(BaseTestClass):
         response = session.get(url, cookies={"session_token":"idksomethinginvalid"})
 
         assert response.status_code == 403, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
     
     def test_logout(self, session):
@@ -174,7 +174,7 @@ class TestAuthentication(BaseTestClass):
         response = session.get(url, cookies=session.cookies.get_dict())
 
         assert response.status_code == 200, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
     
 
@@ -183,5 +183,5 @@ class TestAuthentication(BaseTestClass):
         response = session.get(url, cookies=session.cookies.get_dict())
 
         assert response.status_code == 403, self.buildErrorMessage(
-            response.status_code, response.status_code
+            response.status_code, response.content
         )
