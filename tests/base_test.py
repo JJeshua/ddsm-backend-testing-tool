@@ -7,13 +7,13 @@ class BaseTestClass:
     fake = Faker()
     BASE_URL = "http://localhost:8080"
 
-    @pytest.fixture(scope="module")
+    @pytest.fixture(scope="class")
     def session(self):
         session = requests.Session()
         yield session
         session.close()
 
-    @pytest.fixture(scope="module")
+    @pytest.fixture(scope="class")
     def shared_variables(self):
         shared_data = {
             "email": self.fake.email(),
