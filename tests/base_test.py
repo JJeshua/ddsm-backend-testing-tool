@@ -24,12 +24,11 @@ class BaseTestClass:
             "date_of_birth": self.fake.date_of_birth().isoformat(),
             "post_content": self.fake.sentence(),
             "current_post_id": None,
-            "user_identity": None
+            "user_identity": None,
         }
         return shared_data
 
     def register(self, shared_variables, session):
-        EXPECTED = 200
         url = f"{self.BASE_URL}/auth/register"
         data = {
             "first_name": shared_variables["first_name"],
@@ -41,11 +40,13 @@ class BaseTestClass:
         }
         response = session.post(url, json=data)
 
-        if response.status_code != EXPECTED:
-            print(response.content)
+        if response.status_code != 200:
+            error_message = self.buildErrorMessage(
+                response.status_code, response.content
+            )
+            raise RuntimeError(error_message)
 
     def login(self, shared_variables, session):
-        EXPECTED = 200
         url = f"{self.BASE_URL}/auth/login"
         data = {
             "email": shared_variables["email"],
@@ -53,8 +54,11 @@ class BaseTestClass:
         }
         response = session.post(url, json=data)
 
-        if response.status_code != EXPECTED:
-            print(response.content)
+        if response.status_code != 200:
+            error_message = self.buildErrorMessage(
+                response.status_code, response.content
+            )
+            raise RuntimeError(error_message)
 
     def buildErrorMessage(self, response_status_code, response_content):
-        return f"Unexpected status code: {response_status_code}. Response content: {response_content}"    
+        return f"Unexpected status code: {response_status_code}. Response content: {response_content}"

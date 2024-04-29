@@ -16,7 +16,6 @@ class TestAuthentication(BaseTestClass):
         }
         response = session.post(url, json=data)
 
-
         assert response.status_code == 200, self.buildErrorMessage(
             response.status_code, response.content
         )
