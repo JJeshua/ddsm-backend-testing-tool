@@ -38,29 +38,29 @@ class TestProfile(BaseTestClass):
         pass
 
     def test_archive_profile_valid(self, shared_variables, session):
-        url = f"{self.BASE_URL}/archive/profile"
+        url = f"{self.BASE_URL}/profile/archive"
         response = session.put(url, cookies=session.cookies.get_dict())
         assert response.status_code == 200, self.buildErrorMessage(
             response.status_code, response.content
         )
 
     def test_archive_profile_no_session_token(self, shared_variables, session):
-        url = f"{self.BASE_URL}/unarchive/profile"
-        response = session.put(url, cookies=session.cookies.get_dict())
+        url = f"{self.BASE_URL}/profile/archive"
+        response = session.put(url)
         assert response.status_code == 403, self.buildErrorMessage(
             response.status_code, response.content
         )
 
     def test_unarchive_profile_valid(self, shared_variables, session):
-        url = f"{self.BASE_URL}/unarchive/profile"
+        url = f"{self.BASE_URL}/profile/unarchive"
         response = session.put(url, cookies=session.cookies.get_dict())
         assert response.status_code == 200, self.buildErrorMessage(
             response.status_code, response.content
         )
 
     def test_unarchive_profile_no_session_token(self, shared_variables, session):
-        url = f"{self.BASE_URL}/unarchive/profile"
-        response = session.put(url, cookies=session.cookies.get_dict())
+        url = f"{self.BASE_URL}/profile/unarchive"
+        response = session.put(url)
         assert response.status_code == 403, self.buildErrorMessage(
             response.status_code, response.content
         )
