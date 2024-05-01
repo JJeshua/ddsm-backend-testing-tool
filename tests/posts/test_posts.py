@@ -1,5 +1,6 @@
 from bson import ObjectId
 import json
+import requests
 
 from tests.base_test import BaseTestClass
 
@@ -192,10 +193,36 @@ class TestPosts(BaseTestClass):
         pass
 
     def test_delete_post_valid(self, shared_variables, session):   
-        pass
+        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/delete"
+        response = session.delete(url, cookies=session.cookies.get_dict())
 
-    def test_delete_post_invalid_post_id(self, shared_variables, session):   
-        pass
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
+        response = session.get(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 404, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+
+    def test_delete_post_invalid_post_id(self, session):
+        url = f"{self.BASE_URL}/posts/invalidPostId/delete"
+        response = session.delete(url, cookies=session.cookies.get_dict())
+
+        assert response.status_code == 404, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+        
     def test_delete_post_not_post_owner(self, shared_variables, session):   
-        pass
+        new_user_session = requests.Session()
+
+        self.register(shared_variables, new_user_session)
+        self.login(shared_variables, new_user_session)
+
+        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/delete"
+
+        response = new_user_session.delete(url, cookies=new_user_session.cookies.get_dict())
+
+        assert response.status_code == 403, self.buildErrorMessage(
+            response.status_code, response.content
+        )
