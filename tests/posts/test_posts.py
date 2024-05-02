@@ -208,10 +208,26 @@ class TestPosts(BaseTestClass):
         pass
 
     def test_delete_post_valid(self, shared_variables, session):   
-        pass
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/delete"
+        response = session.delete(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_delete_post_invalid_post_id(self, shared_variables, session):   
-        pass
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/delete"
+        response = session.delete(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 404, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_delete_post_not_post_owner(self, shared_variables, session):   
-        pass
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/delete"
+        response = session.delete(url, cookies=session.cookies.get_dict())
+        data = response.json()
+        assert "post_owner_id" in data, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+        assert (
+            ObjectId(data["post_owner_id"]) != shared_variables["user_identity"]
+        ), self.buildErrorMessage(response.status_code, response.status_code)
