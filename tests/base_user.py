@@ -1,10 +1,9 @@
 import requests
 from bson import ObjectId
 
-from tests.base_test import BaseTestClass
 
 
-class BaseUser(BaseTestClass):
+class BaseUser:
     def __init__(self):
         self.BASE_URL = "http://localhost:8080"
         self.session = requests.Session()

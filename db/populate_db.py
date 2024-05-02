@@ -1,7 +1,7 @@
 import pymongo
 
 
-from tests.base_test import BaseTestClass
+from tests.base_user import BaseUser
 
 
 NUM_OF_USERS = 100
@@ -23,8 +23,7 @@ db = mongo_client[db_name]
 
 posts = []
 
-users = [BaseTestClass() for _ in range(NUM_OF_USERS)]
-
+users = [BaseUser() for _ in range(NUM_OF_USERS)]
 
 # Close the MongoDB connection
 mongo_client.close()
