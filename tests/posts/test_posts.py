@@ -2,6 +2,7 @@ from bson import ObjectId
 import json
 
 from tests.base_test import BaseTestClass
+from tests.base_user import BaseUser
 
 
 class TestPosts(BaseTestClass):
@@ -218,20 +219,15 @@ class TestPosts(BaseTestClass):
 
 
     def test_delete_post_not_post_owner(self, shared_variables, session):
-        # Use the shared_variables to get the current_post_id of another user
-        other_user_post_id = shared_variables["current_post_id"]
+        user = BaseUser()
+        user.register()
+        user.login()
+        user.create_post()
 
-
-        # Ensure that the other_user_post_id is not None
-        assert other_user_post_id is not None, "No post ID found for another user"
-
-
-        # Try using a different post ID
-        other_user_post_id = "6632db677bb2d0a81b56bbfd"
-
-
-        url = f"{self.BASE_URL}/posts/{other_user_post_id}/delete"
-        response = session.delete(url, cookies=session.cookies.get_dict())
+        url = f"{self.BASE_URL}/posts/{user.
+        session_storage["current_post_id"]}/delete"
+        response = session.delete(url, cookies=session.
+        cookies.get_dict())
 
 
         assert response.status_code == 403, self.buildErrorMessage(
