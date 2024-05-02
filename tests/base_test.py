@@ -24,6 +24,8 @@ class BaseTestClass:
             "date_of_birth": self.fake.date_of_birth().isoformat(),
             "post_content": self.fake.sentence(),
             "current_post_id": None,
+            "current_comment_id": None,
+            "comment_content": self.fake.sentence(),
             "user_identity": None,
         }
         return shared_data
