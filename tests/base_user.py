@@ -1,10 +1,11 @@
 import requests
 from bson import ObjectId
-
+from faker import Faker
 
 
 class BaseUser:
     def __init__(self):
+        self.fake = Faker()
         self.BASE_URL = "http://localhost:8080"
         self.session = requests.Session()
         self.session_storage = {
@@ -64,5 +65,33 @@ class BaseUser:
         url = f"{self.BASE_URL}/posts"
         data = {"post_content": self.session_storage["post_content"]}
 
-        response = self.session.post(url, json=data, cookies=self.session.cookies.get_dict())
+        response = self.session.post(
+            url, json=data, cookies=self.session.cookies.get_dict()
+        )
         self.session_storage["current_post_id"] = ObjectId(response.json().strip('"'))
+
+        self.session_storage["post_content"] = self.fake.sentence()
+
+    def like_post(self, post_id):
+        url = f"{self.BASE_URL}/posts/{post_id}/like"
+        response = self.session.post(url, cookies=self.session.cookies.get_dict())
+
+        if response.status_code != 201:
+            error_message = self.buildErrorMessage(
+                response.status_code, response.content
+            )
+            raise RuntimeError(error_message)
+
+    def comment_on_post(self, post_id):
+        url = f"{self.BASE_URL}/posts/{post_id}/comment"
+        data = {"comment_content": self.fake.sentence()}
+        response = self.session.post(url, json=data,cookies=self.session.cookies.get_dict())
+
+        if response.status_code != 201:
+            error_message = self.buildErrorMessage(
+                response.status_code, response.content
+            )
+            raise RuntimeError(error_message)
+
+    def buildErrorMessage(self, response_status_code, response_content):
+        return f"Unexpected status code: {response_status_code}. Response content: {response_content}"

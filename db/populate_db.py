@@ -1,16 +1,13 @@
 import pymongo
-
+from random import random
 
 from tests.base_user import BaseUser
 
 
-NUM_OF_USERS = 100
-
-
-def clear_all_collections(db):
-    for collection_name in db.list_collection_names():
-        db[collection_name].delete_many({})
-        print(f"Cleared collection: {collection_name}")
+NUM_OF_USERS = 5
+NUM_OF_POSTS_PER_USER = 15
+USER_PROBABILITY_TO_LIKE = 0.345
+USER_PROBABILITY_TO_COMMENT = 0.123
 
 
 print('Populating DB.')
@@ -21,9 +18,31 @@ db_name = "DuckPond"
 # Connect to the database
 db = mongo_client[db_name]
 
-posts = []
-
+# Create an array of users
 users = [BaseUser() for _ in range(NUM_OF_USERS)]
+
+# Register all of the users to an account and login
+for user in users:
+    user.register()
+    user.login()
+
+all_post_ids = []
+# Make each user create x amount of posts
+for user in users:
+    for _ in range (NUM_OF_POSTS_PER_USER):
+        user.create_post()
+        all_post_ids.append(user.session_storage["current_post_id"])
+
+
+# User interaction with posts
+for post_id in all_post_ids:
+    for user in users:
+        if random() < USER_PROBABILITY_TO_LIKE:
+            user.like_post(post_id)
+
+        if random() < USER_PROBABILITY_TO_COMMENT:
+            user.comment_on_post(post_id)
+
 
 # Close the MongoDB connection
 mongo_client.close()
