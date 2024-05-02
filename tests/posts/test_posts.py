@@ -141,13 +141,29 @@ class TestPosts(BaseTestClass):
         )
     
     def test_delete_comment_valid(self, shared_variables, session):   
-        pass
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment/{shared_variables["current_comment_id"]}"
+        response = session.delete(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_delete_comment_invalid_comment_id(self, shared_variables, session):   
-        pass
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment/invalidCommentId"
+        response = session.delete(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 404, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_delete_comment_not_comment_owner(self, shared_variables, session):   
-        pass
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment/{shared_variables["current_comment_id"]}"
+        response = session.delete(url, cookies=session.cookies.get_dict())
+        data = response.json()
+        assert "comment_owner_id" in data, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+        assert (
+            ObjectId(data["comment_owner_id"]) != shared_variables["user_identity"]
+        ), self.buildErrorMessage(response.status_code, response.status_code)
     
     def test_archive_post_valid(self, shared_variables, session):   
         pass
