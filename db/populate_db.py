@@ -27,7 +27,7 @@ for user in users:
     user.login()
 
 all_post_ids = []
-# Make each user create x amount of posts
+# Create each users posts
 for user in users:
     for _ in range (NUM_OF_POSTS_PER_USER):
         user.create_post()
