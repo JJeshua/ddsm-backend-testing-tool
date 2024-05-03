@@ -1,11 +1,11 @@
 import requests
 from bson import ObjectId
+from faker import Faker
 
-from tests.base_test import BaseTestClass
 
-
-class BaseUser(BaseTestClass):
+class BaseUser:
     def __init__(self):
+        self.fake = Faker()
         self.BASE_URL = "http://localhost:8080"
         self.session = requests.Session()
         self.session_storage = {
@@ -17,10 +17,12 @@ class BaseUser(BaseTestClass):
             "date_of_birth": self.fake.date_of_birth().isoformat(),
             "post_content": self.fake.sentence(),
             "current_post_id": None,
+            "current_comment_id": None,
+            "comment_content": None,
             "user_identity": None,
         }
 
-    def __del__(self):
+    def close_session(self):
         self.session.close()
 
     def __str__(self):
@@ -65,5 +67,41 @@ class BaseUser(BaseTestClass):
         url = f"{self.BASE_URL}/posts"
         data = {"post_content": self.session_storage["post_content"]}
 
-        response = self.session.post(url, json=data, cookies=self.session.cookies.get_dict())
+        response = self.session.post(
+            url, json=data, cookies=self.session.cookies.get_dict()
+        )
         self.session_storage["current_post_id"] = ObjectId(response.json().strip('"'))
+
+        self.session_storage["post_content"] = self.fake.sentence()
+
+    def like_post(self, post_id):
+        url = f"{self.BASE_URL}/posts/{post_id}/like"
+        response = self.session.post(url, cookies=self.session.cookies.get_dict())
+
+        if response.status_code != 201:
+            error_message = self.buildErrorMessage(
+                response.status_code, response.content
+            )
+            raise RuntimeError(error_message)
+
+    def comment_on_post(self, post_id):
+        url = f"{self.BASE_URL}/posts/{post_id}/comment"
+        comment = self.fake.sentence()
+        data = {"comment_content": comment}
+
+        self.session_storage["comment_content"] = comment
+        response = self.session.post(
+            url, json=data, cookies=self.session.cookies.get_dict()
+        )
+        self.session_storage["current_comment_id"] = ObjectId(
+            response.json().strip('"')
+        )
+
+        if response.status_code != 201:
+            error_message = self.buildErrorMessage(
+                response.status_code, response.content
+            )
+            raise RuntimeError(error_message)
+
+    def buildErrorMessage(self, response_status_code, response_content):
+        return f"Unexpected status code: {response_status_code}. Response content: {response_content}"
