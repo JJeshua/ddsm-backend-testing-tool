@@ -142,8 +142,7 @@ class TestPosts(BaseTestClass):
             response.status_code, response.content
         )
     
-    def test_delete_comment_valid(self, shared_variables, session):
-        # print(shared_variables["current_comment_id"])   
+    def test_delete_comment_valid(self, shared_variables, session):  
         url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment/{shared_variables["current_comment_id"]}"
         response = session.delete(url, cookies=session.cookies.get_dict())
         assert response.status_code == 200, self.buildErrorMessage(
