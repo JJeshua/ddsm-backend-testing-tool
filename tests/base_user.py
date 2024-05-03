@@ -20,7 +20,7 @@ class BaseUser:
             "user_identity": None,
         }
 
-    def __del__(self):
+    def close_session(self):
         self.session.close()
 
     def __str__(self):
