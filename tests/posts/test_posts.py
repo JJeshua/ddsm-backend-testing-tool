@@ -171,8 +171,6 @@ class TestPosts(BaseTestClass):
     def test_get_likes_valid(self, shared_variables, session):
         url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{shared_variables['limit']}/{shared_variables['step']}/likes"
         response = session.get(url, cookies=session.cookies.get_dict())
-        # print(response.json()[0])
-        # print(response.json()[0]['username'])
         assert response.json()[0]['username'] and response.status_code == 200, self.buildErrorMessage(
             response.status_code, response.content
         )
