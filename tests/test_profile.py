@@ -23,7 +23,14 @@ class TestProfile(BaseTestClass):
         )
 
     def test_get_profile_invalid_session_token(self, shared_variables, session):
-        pass
+        url = f"{self.BASE_URL}/profile"
+        data = {"post_content": shared_variables["post_content"]}
+
+        response = session.get(url, json=data)
+
+        assert response.status_code == 403, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_update_profile_valid(self, shared_variables, session):
         pass

@@ -1,5 +1,6 @@
 import pytest
 import requests
+import random
 from faker import Faker
 
 
@@ -25,6 +26,8 @@ class BaseTestClass:
             "post_content": self.fake.sentence(),
             "current_post_id": None,
             "user_identity": None,
+            "limit": random.randrange(100),
+            "step": 0,
         }
         return shared_data
 
