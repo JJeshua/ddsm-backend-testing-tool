@@ -1,5 +1,6 @@
 import pytest
 import requests
+import random
 from faker import Faker
 
 
@@ -27,6 +28,8 @@ class BaseTestClass:
             "current_comment_id": None,
             "comment_content": self.fake.sentence(),
             "user_identity": None,
+            "limit": random.randrange(100),
+            "step": 0,
         }
         return shared_data
 
