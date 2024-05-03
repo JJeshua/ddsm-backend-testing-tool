@@ -177,7 +177,11 @@ class TestPosts(BaseTestClass):
         )
 
     def test_get_likes_invalid_post_id(self, shared_variables, session):   
-        pass
+        url = f"{self.BASE_URL}/posts/invalidPostId/{shared_variables['limit']}/{shared_variables['step']}/likes"
+        response = session.post(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 404, self.buildErrorMessage(
+            response.status_code, response.content
+        )
     
     def test_get_likes_invalid_lim(self, shared_variables, session):   
         # assert shared_variables['limit'] > 0 and shared_variables['step'] >= 0 and response.status_code == 200, self.buildErrorMessage(
