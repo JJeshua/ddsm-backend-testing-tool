@@ -1,5 +1,6 @@
 from bson import ObjectId
 import json
+import math
 
 from tests.base_test import BaseTestClass
 
@@ -183,11 +184,14 @@ class TestPosts(BaseTestClass):
             response.status_code, response.content
         )
     
-    def test_get_likes_invalid_lim(self, shared_variables, session):   
-        # assert shared_variables['limit'] > 0 and shared_variables['step'] >= 0 and response.status_code == 200, self.buildErrorMessage(
-        #     response.status_code, response.content
-        # )
-        pass
+    def test_get_likes_invalid_lim(self, shared_variables, session):
+        limit = -4;   
+        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{limit}/{shared_variables['step']}/likes"
+        response = session.get(url, cookies=session.cookies.get_dict())
+        assert (not math.isnan(limit) or not (limit > 0)) \
+            and (response.status_code == 400), self.buildErrorMessage(
+                response.status_code, response.content
+        )
 
     def test_get_likes_invalid_step(self, shared_variables, session):   
         # assert shared_variables['limit'] > 0 and shared_variables['step'] >= 0 and response.status_code == 200, self.buildErrorMessage(
