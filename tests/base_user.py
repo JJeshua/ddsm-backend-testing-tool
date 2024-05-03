@@ -17,6 +17,8 @@ class BaseUser:
             "date_of_birth": self.fake.date_of_birth().isoformat(),
             "post_content": self.fake.sentence(),
             "current_post_id": None,
+            "current_comment_id": None,
+            "comment_content": None,
             "user_identity": None,
         }
 
@@ -84,8 +86,16 @@ class BaseUser:
 
     def comment_on_post(self, post_id):
         url = f"{self.BASE_URL}/posts/{post_id}/comment"
-        data = {"comment_content": self.fake.sentence()}
-        response = self.session.post(url, json=data,cookies=self.session.cookies.get_dict())
+        comment = self.fake.sentence()
+        data = {"comment_content": comment}
+
+        self.session_storage["comment_content"] = comment
+        response = self.session.post(
+            url, json=data, cookies=self.session.cookies.get_dict()
+        )
+        self.session_storage["current_comment_id"] = ObjectId(
+            response.json().strip('"')
+        )
 
         if response.status_code != 201:
             error_message = self.buildErrorMessage(
