@@ -167,16 +167,28 @@ class TestPosts(BaseTestClass):
     def test_unarchive_post_not_post_owner(self, shared_variables, session):   
         pass
 
-    def test_get_likes_valid(self, shared_variables, session):   
-        pass
+    def test_get_likes_valid(self, shared_variables, session):
+        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{shared_variables['limit']}/{shared_variables['step']}/likes"
+        response = session.get(url, cookies=session.cookies.get_dict())
+        # print(response.json()[0])
+        # print(response.json()[0]['username'])
+        assert response.json()[0]['username'] and response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_get_likes_invalid_post_id(self, shared_variables, session):   
         pass
     
     def test_get_likes_invalid_lim(self, shared_variables, session):   
+        # assert shared_variables['limit'] > 0 and shared_variables['step'] >= 0 and response.status_code == 200, self.buildErrorMessage(
+        #     response.status_code, response.content
+        # )
         pass
 
     def test_get_likes_invalid_step(self, shared_variables, session):   
+        # assert shared_variables['limit'] > 0 and shared_variables['step'] >= 0 and response.status_code == 200, self.buildErrorMessage(
+        #     response.status_code, response.content
+        # )
         pass
 
     def test_get_comments_valid(self, shared_variables, session):   
