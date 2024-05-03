@@ -119,7 +119,7 @@ class TestPosts(BaseTestClass):
         url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment"
         data = {"comment_content": self.fake.sentence()}
         response = session.post(url, json=data,cookies=session.cookies.get_dict())
-
+        shared_variables["current_comment_id"] = ObjectId(response.json().strip('"'))
         assert response.status_code == 201, self.buildErrorMessage(
             response.status_code, response.content
         )
