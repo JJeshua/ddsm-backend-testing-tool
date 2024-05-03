@@ -194,10 +194,13 @@ class TestPosts(BaseTestClass):
         )
 
     def test_get_likes_invalid_step(self, shared_variables, session):   
-        # assert shared_variables['limit'] > 0 and shared_variables['step'] >= 0 and response.status_code == 200, self.buildErrorMessage(
-        #     response.status_code, response.content
-        # )
-        pass
+        step = -4;   
+        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{shared_variables['limit']}/{step}/likes"
+        response = session.get(url, cookies=session.cookies.get_dict())
+        assert (not math.isnan(step) or not (step >= 0)) \
+            and (response.status_code == 400), self.buildErrorMessage(
+                response.status_code, response.content
+        )
 
     def test_get_comments_valid(self, shared_variables, session):   
         pass
