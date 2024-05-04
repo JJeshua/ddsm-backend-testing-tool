@@ -227,13 +227,45 @@ class TestPosts(BaseTestClass):
     def test_get_commments_invalid_step(self, shared_variables, session):   
         pass
 
-    def test_delete_post_valid(self, shared_variables, session):   
-        pass
+    def test_delete_post_valid(self, shared_variables, session):  
+        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/delete"
+        response = session.delete(url, cookies=session.cookies.get_dict())
 
-    def test_delete_post_invalid_post_id(self, shared_variables, session):   
-        pass
 
-    def test_delete_post_not_post_owner(self, shared_variables, session):   
-        pass
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
-    
+
+        response = session.get(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 404, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+
+
+    def test_delete_post_invalid_post_id(self, session):
+        url = f"{self.BASE_URL}/posts/invalidPostId/delete"
+        response = session.delete(url, cookies=session.cookies.get_dict())
+
+
+        assert response.status_code == 404, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+
+
+    def test_delete_post_not_post_owner(self, shared_variables, session):
+        user = BaseUser()
+        user.register()
+        user.login()
+        user.create_post()
+
+        url = f"{self.BASE_URL}/posts/{user.
+        session_storage["current_post_id"]}/delete"
+        response = session.delete(url, cookies=session.
+        cookies.get_dict())
+
+
+        assert response.status_code == 403, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+
