@@ -57,6 +57,54 @@ class TestPosts(BaseTestClass):
             response.status_code, response.content
         )
     
+    def test_get_posts_by_username_valid(self, session):
+        user = BaseUser()
+        user.register()
+        user.login()
+        user.create_post()
+
+        PAGE = 1
+        USERNAME = user.session_storage['username']
+
+        url = f"{self.BASE_URL}/posts/user/{USERNAME}/{PAGE}"
+        response = session.get(url, cookies=session.cookies.get_dict())
+        posts = json.loads(response.content)
+
+        assert response.status_code == 200, self.buildErrorMessage(response.status_code, response.content)
+        assert len(posts) > 0, self.buildErrorMessage(response.status_code, response.content)
+    
+    def test_get_posts_by_username_invalid_page(self, session):
+        user = BaseUser()
+        user.register()
+        user.login()
+        user.create_post()
+
+        PAGE = 0
+        USERNAME = user.session_storage['username']
+
+        url = f"{self.BASE_URL}/posts/user/{USERNAME}/{0}"
+        response = session.get(url, cookies=session.cookies.get_dict())
+        posts = json.loads(response.content)
+
+        assert response.status_code == 400, self.buildErrorMessage(response.status_code, response.content)
+        assert len(posts) > 0, self.buildErrorMessage(response.status_code, response.content)
+    
+    def test_get_posts_by_username_invalid_username(self, session):
+        user = BaseUser()
+        user.register()
+        user.login()
+        user.create_post()
+
+        PAGE = 1
+        USERNAME = 'invalidUsername'
+
+        url = f"{self.BASE_URL}/posts/user/{USERNAME}/{PAGE}"
+        response = session.get(url, cookies=session.cookies.get_dict())
+        posts = json.loads(response.content)
+
+        assert response.status_code == 404, self.buildErrorMessage(response.status_code, response.content)
+        assert len(posts) > 0, self.buildErrorMessage(response.status_code, response.content)
+    
     def test_like_post(self, shared_variables, session):
         url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/like"
         response = session.post(url, cookies=session.cookies.get_dict())
