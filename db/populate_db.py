@@ -30,7 +30,7 @@ def main():
 
 
 if __name__ == "__main__":
-    NUM_OF_USERS = 50
+    NUM_OF_USERS = 5
     NUM_OF_POSTS_PER_USER = 15
     USER_PROBABILITY_TO_LIKE = 0.345
     USER_PROBABILITY_TO_COMMENT = 0.123

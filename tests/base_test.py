@@ -27,8 +27,7 @@ class BaseTestClass:
             "post_content": self.fake.sentence(),
             "current_post_id": None,
             "user_identity": None,
-            "limit": random.randrange(100),
-            "step": 0,
+            "page": 1,
         }
         return shared_data
 

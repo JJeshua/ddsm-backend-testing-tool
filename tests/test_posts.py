@@ -184,41 +184,29 @@ class TestPosts(BaseTestClass):
         pass
 
     def test_get_likes_valid(self, shared_variables, session):
-        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{shared_variables['limit']}/{shared_variables['step']}/likes"
+        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{shared_variables['page']}/likes"
         response = session.get(url, cookies=session.cookies.get_dict())
         assert response.json()[0]['username'] and response.status_code == 200, self.buildErrorMessage(
             response.status_code, response.content
         )
 
     def test_get_likes_invalid_post_id(self, shared_variables, session):   
-        url = f"{self.BASE_URL}/posts/invalidPostId/{shared_variables['limit']}/{shared_variables['step']}/likes"
+        url = f"{self.BASE_URL}/posts/invalidPostId/{shared_variables['page']}/likes"
         response = session.post(url, cookies=session.cookies.get_dict())
         assert response.status_code == 404, self.buildErrorMessage(
             response.status_code, response.content
         )
     
-    def test_get_likes_invalid_lim(self, shared_variables, session):
-        limit = -4;   
-        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{limit}/{shared_variables['step']}/likes"
+    def test_get_likes_invalid_page(self, shared_variables, session):
+        PAGE = -4;   
+        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{PAGE}/likes"
         response = session.get(url, cookies=session.cookies.get_dict())
-        assert (not math.isnan(limit) or not (limit > 0)) \
-            and (response.status_code == 400), self.buildErrorMessage(
-                response.status_code, response.content
-        )
-
-    def test_get_likes_invalid_step(self, shared_variables, session):   
-        step = -4;   
-        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{shared_variables['limit']}/{step}/likes"
-        response = session.get(url, cookies=session.cookies.get_dict())
-        assert (not math.isnan(step) or not (step >= 0)) \
-            and (response.status_code == 400), self.buildErrorMessage(
+        assert (response.status_code == 400), self.buildErrorMessage(
                 response.status_code, response.content
         )
 
     def test_get_comments_valid(self, shared_variables, session):   
-        LIMIT = 5
-        STEP = 0
-        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{LIMIT}/{STEP}/allComments"
+        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{shared_variables['page']}/allComments"
         response = session.get(url, cookies=session.cookies.get_dict())
 
 
@@ -227,9 +215,7 @@ class TestPosts(BaseTestClass):
         )
 
     def test_get_commments_invalid_post_id(self, shared_variables, session):   
-        LIMIT = 5
-        STEP = 0
-        url = f"{self.BASE_URL}/posts/invaidPostId/{LIMIT}/{STEP}/allComments"
+        url = f"{self.BASE_URL}/posts/invaidPostId/{shared_variables['page']}/allComments"
         response = session.get(url, cookies=session.cookies.get_dict())
 
 
@@ -237,21 +223,9 @@ class TestPosts(BaseTestClass):
             response.status_code, response.content
         )
     
-    def test_get_commments_invalid_lim(self, shared_variables, session):   
-        LIMIT = -5
-        STEP = 0
-        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{LIMIT}/{STEP}/allComments"
-        response = session.get(url, cookies=session.cookies.get_dict())
-
-
-        assert response.status_code == 400, self.buildErrorMessage(
-            response.status_code, response.content
-        )
-
-    def test_get_commments_invalid_step(self, shared_variables, session):   
-        LIMIT = 5
-        STEP = -5
-        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{LIMIT}/{STEP}/allComments"
+    def test_get_commments_invalid_page(self, shared_variables, session):   
+        PAGE = 0
+        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{PAGE}/allComments"
         response = session.get(url, cookies=session.cookies.get_dict())
 
 
