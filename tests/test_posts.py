@@ -223,13 +223,34 @@ class TestPosts(BaseTestClass):
         pass
 
     def test_unarchive_post_valid(self, shared_variables, session):   
-        pass
+        url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/unarchive"
+        response = session.put(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_unarchive_post_invalid_post_id(self, shared_variables, session):   
-        pass
+        url = f"{self.BASE_URL}/posts/invalidpostid/unarchive"
+        response = session.put(url, cookies=session.cookies.get_dict())
+        assert response.status_code == 404, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_unarchive_post_not_post_owner(self, shared_variables, session):   
-        pass
+        user = BaseUser()
+        user.register()
+        user.login()
+        user.create_post()
+
+        url = f"{self.BASE_URL}/posts/{user.
+        session_storage["current_post_id"]}/unarchive"
+        response = session.put(url, cookies=session.
+        cookies.get_dict())
+
+
+        assert response.status_code == 403, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_get_likes_valid(self, shared_variables, session):
         url = f"{self.BASE_URL}/posts/{shared_variables['current_post_id']}/{shared_variables['page']}/likes"
