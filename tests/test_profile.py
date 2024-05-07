@@ -1,4 +1,5 @@
 import json
+import base64
 
 from tests.base_test import BaseTestClass
 from tests.base_user import BaseUser
@@ -74,8 +75,18 @@ class TestProfile(BaseTestClass):
         )
 
     def test_update_profile_valid_new_picture(self, shared_variables, session):
-        pass
-
+        url = f"{self.BASE_URL}/profile"
+        new_user_info = {
+            "profile_picture": "bmV3IHByb2ZpbGUgcGljdHVyZSB0ZXN0",
+        }
+        if(base64.b64encode(base64.b64decode(new_user_info['profile_picture'])).decode("utf-8") == new_user_info['profile_picture']): 
+            response = session.put(url, json=new_user_info, cookies=session.cookies.get_dict())
+        else: 
+            assert False
+        
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.content
+        )
     def test_update_profile_invalid_new_picture(self, shared_variables, session):
         pass
 
