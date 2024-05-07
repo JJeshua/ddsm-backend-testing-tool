@@ -1,7 +1,7 @@
 import json
 
 from tests.base_test import BaseTestClass
-
+from tests.base_user import BaseUser
 
 class TestProfile(BaseTestClass):
     def test_get_profile_valid(self, shared_variables, session):
@@ -33,10 +33,45 @@ class TestProfile(BaseTestClass):
         )
 
     def test_update_profile_valid(self, shared_variables, session):
-        pass
+        user = BaseUser()
+        user.register()
+        user.login()
+        url = f"{self.BASE_URL}/profile"
+        new_user_info = {
+            "email": self.fake.email(),
+            "username": self.fake.user_name(),
+            "first_name": self.fake.first_name(),
+            "last_name": self.fake.last_name(),
+            "date_of_birth": self.fake.date_of_birth().isoformat(),
+            "country": self.fake.country(),
+            "biography": self.fake.paragraph(nb_sentences=3),
+            "profile_picture": "fake-base64-string",
+        }
+        response = session.put(url, json=new_user_info, cookies=session.cookies.get_dict())
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+        url = f"{self.BASE_URL}/profile"
+        response = session.get(url, cookies=session.cookies.get_dict())
+        info = json.loads(response.content)
+        assert (info['profile']['email'] != user.session_storage['email'] and \
+               info['profile']['username'] != user.session_storage['username'] and \
+               info['profile']['user_info']['first_name'] != user.session_storage['first_name'] and \
+               info['profile']['user_info']['last_name'] != user.session_storage['last_name'] and \
+               info['profile']['user_info']['date_of_birth'] != user.session_storage['date_of_birth'] and \
+               info['profile']['user_info']['country'] != user.session_storage['country'] and \
+               info['profile']['user_info']['profile_picture'] != user.session_storage['profile_picture']), self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_update_profile_no_payload(self, shared_variables, session):
-        pass
+        url = f"{self.BASE_URL}/profile"
+        new_user_info = {
+        }
+        response = session.put(url, json=new_user_info, cookies=session.cookies.get_dict())
+        assert response.status_code == 400, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_update_profile_valid_new_picture(self, shared_variables, session):
         pass
