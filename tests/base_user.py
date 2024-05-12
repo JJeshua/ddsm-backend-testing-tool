@@ -1,6 +1,8 @@
 import requests
 from bson import ObjectId
 from faker import Faker
+import base64
+import os
 
 
 class BaseUser:
@@ -17,7 +19,7 @@ class BaseUser:
             "date_of_birth": self.fake.date_of_birth().isoformat(),
             "country": self.fake.country(),
             "biography": self.fake.paragraph(nb_sentences=3),
-            "profile_picture": None,
+            "profile_picture": base64.b64encode(os.urandom(16)).decode("utf-8"),
             "post_content": self.fake.sentence(),
             "current_post_id": None,
             "current_comment_id": None,
@@ -45,6 +47,19 @@ class BaseUser:
             "date_of_birth": self.session_storage["date_of_birth"],
         }
         response = self.session.post(url, json=data)
+
+        if response.status_code != 200:
+            error_message = self.buildErrorMessage(
+                response.status_code, response.content
+            )
+            raise RuntimeError(error_message)
+
+    def updateProfile(self):
+        url = f"{self.BASE_URL}/profile"
+        data = {"profile_picture": self.session_storage["profile_picture"]}
+        response = self.session.put(
+            url, json=data, cookies=self.session.cookies.get_dict()
+        )
 
         if response.status_code != 200:
             error_message = self.buildErrorMessage(

@@ -11,6 +11,7 @@ def main():
     for user in users:
         user.register()
         user.login()
+        user.updateProfile()
 
     all_post_ids = []
     # Create each users posts
