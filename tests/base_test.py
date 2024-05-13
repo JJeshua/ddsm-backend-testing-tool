@@ -1,6 +1,8 @@
 import pytest
 import requests
+import random
 from faker import Faker
+from bson import ObjectId
 
 
 class BaseTestClass:
@@ -25,6 +27,7 @@ class BaseTestClass:
             "post_content": self.fake.sentence(),
             "current_post_id": None,
             "user_identity": None,
+            "page": 1,
         }
         return shared_data
 
@@ -59,6 +62,19 @@ class BaseTestClass:
                 response.status_code, response.content
             )
             raise RuntimeError(error_message)
+
+    def create_post(self, shared_variables, session):
+        url = f"{self.BASE_URL}/posts"
+        data = {"post_content": shared_variables["post_content"]}
+
+        response = session.post(url, json=data, cookies=session.cookies.get_dict())
+        shared_variables["current_post_id"] = ObjectId(response.json().strip('"'))
+
+    def makeNewComment(self, shared_variables, session):
+        url = f"{self.BASE_URL}/posts/{shared_variables["current_post_id"]}/comment"
+        data = {"comment_content": self.fake.sentence()}
+        response = session.post(url, json=data,cookies=session.cookies.get_dict())
+        shared_variables["current_comment_id"] = ObjectId(response.json().strip('"'))
 
     def buildErrorMessage(self, response_status_code, response_content):
         return f"Unexpected status code: {response_status_code}. Response content: {response_content}"

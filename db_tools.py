@@ -1,5 +1,7 @@
 import argparse
 import subprocess
+import cProfile
+import pstats
 
 
 def populate_database():
@@ -15,11 +17,28 @@ def main():
     parser.add_argument(
         "action", choices=["populate", "clear"], help="Action to perform"
     )
+    parser.add_argument(
+        "--profile", action="store_true", help="Enable profiling with cProfile."
+    )
     args = parser.parse_args()
 
-    if args.action == "populate":
+    if args.profile:
+        with cProfile.Profile() as profile:
+            perform_action(args.action)
+            print("Successfully performed action:", args.action)
+
+        results = pstats.Stats(profile)
+        results.sort_stats(pstats.SortKey.TIME)
+        results.print_stats()
+    else:
+        perform_action(args.action)
+        print("Successfully performed action:", args.action)
+
+
+def perform_action(action):
+    if action == "populate":
         populate_database()
-    elif args.action == "clear":
+    elif action == "clear":
         clear_database()
 
 

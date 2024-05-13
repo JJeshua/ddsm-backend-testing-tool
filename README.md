@@ -17,6 +17,7 @@ cd ddsm-backend-testing-tool
 4. **Create the Conda Environment**: Create a new Conda environment using the environment.yml file:
 ```bash
 conda env create -f environment.yml
+pip install -e .
 ```
 This will create a new environment named APITesting with all the required dependencies installed.
 
