@@ -148,10 +148,33 @@ class TestProfile(BaseTestClass):
         )
 
     def test_delete_profile_valid(self, shared_variables, session):
-        pass
+        user = BaseUser()
+        user.register()
+        user.login()
+        user.archive_profile(includeCookies=True)
+        response = user.delete_profile(includeCookies=True)
+
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_delete_profile_no_session_token(self, shared_variables, session):
-        pass
+        user = BaseUser()
+        user.register()
+        user.login()
+        user.archive_profile(includeCookies=True)
+        response = user.delete_profile(includeCookies=False)
+
+        assert response.status_code == 403, self.buildErrorMessage(
+            response.status_code, response.content
+        )
 
     def test_delete_profile_delete_unarchived_profile(self, shared_variables, session):
-        pass
+        user = BaseUser()
+        user.register()
+        user.login()
+        response = user.delete_profile(includeCookies=True)
+
+        assert response.status_code == 400, self.buildErrorMessage(
+            response.status_code, response.content
+        )
