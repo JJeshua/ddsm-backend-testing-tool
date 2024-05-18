@@ -123,3 +123,20 @@ class BaseUser:
 
     def buildErrorMessage(self, response_status_code, response_content):
         return f"Unexpected status code: {response_status_code}. Response content: {response_content}"
+
+    def archive_profile(self, includeCookies):
+        url = f"{self.BASE_URL}/profile/archive"
+        cookies = self.session.cookies.get_dict() if includeCookies else None
+        response = self.session.put(url, cookies=cookies)
+
+    def unarchive_profile(self, includeCookies):
+        url = f"{self.BASE_URL}/profile/unarchive"
+        cookies = self.session.cookies.get_dict() if includeCookies else None
+        response = self.session.put(url, cookies=cookies)
+
+    def delete_profile(self, includeCookies):
+        url = f"{self.BASE_URL}/profile/delete"
+        cookies = self.session.cookies.get_dict() if includeCookies else None
+        response = self.session.delete(url, cookies=cookies)
+
+        return response
