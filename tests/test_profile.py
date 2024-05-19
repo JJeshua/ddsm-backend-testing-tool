@@ -178,3 +178,39 @@ class TestProfile(BaseTestClass):
         assert response.status_code == 400, self.buildErrorMessage(
             response.status_code, response.content
         )
+
+    def test_get_user_public_info_valid(self, shared_variables, session):
+        user = BaseUser()
+        user.register()
+        user.login()
+
+        url = f"{self.BASE_URL}/profile/user/{user.session_storage['username']}"
+        response = session.get(url, cookies=session.cookies.get_dict())
+
+        assert response.status_code == 200, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+
+    def test_get_user_public_info_no_session_token(self, shared_variables, session):
+        user = BaseUser()
+        user.register()
+        user.login()
+
+        url = f"{self.BASE_URL}/profile/user/{user.session_storage['username']}"
+        response = session.get(url)
+
+        assert response.status_code == 403, self.buildErrorMessage(
+            response.status_code, response.content
+        )
+
+    def test_get_user_public_info_invalid_username(self, shared_variables, session):
+        user = BaseUser()
+        user.register()
+        user.login()
+
+        url = f"{self.BASE_URL}/profile/user/invalidUsername"
+        response = session.get(url, cookies=session.cookies.get_dict())
+
+        assert response.status_code == 404, self.buildErrorMessage(
+            response.status_code, response.content
+        )
