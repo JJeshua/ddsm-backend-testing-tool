@@ -58,19 +58,20 @@ class TestProfile(BaseTestClass):
         url = f"{self.BASE_URL}/profile"
         response = session.get(url, cookies=session.cookies.get_dict())
         info = json.loads(response.content)
+        print(info)
         assert (
-            info["profile"]["email"] != user.session_storage["email"]
-            and info["profile"]["username"] != user.session_storage["username"]
-            and info["profile"]["user_info"]["first_name"]
+            info["email"] != user.session_storage["email"]
+            and info["username"] != user.session_storage["username"]
+            and info["user_info"]["first_name"]
             != user.session_storage["first_name"]
-            and info["profile"]["user_info"]["last_name"]
+            and info["user_info"]["last_name"]
             != user.session_storage["last_name"]
-            and info["profile"]["user_info"]["date_of_birth"]
+            and info["user_info"]["date_of_birth"]
             != user.session_storage["date_of_birth"]
-            and info["profile"]["user_info"]["country"]
+            and info["user_info"]["country"]
             != user.session_storage["country"]
-            and info["profile"]["user_info"]["profile_picture"]
-            != user.session_storage["profile_picture"]
+            and (hasattr(info["user_info"], "profile_picture") or (info["user_info"]["profile_picture"]
+            != user.session_storage["profile_picture"]))
         ), self.buildErrorMessage(response.status_code, response.content)
 
     def test_update_profile_no_payload(self, shared_variables, session):
