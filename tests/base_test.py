@@ -7,7 +7,7 @@ from bson import ObjectId
 
 class BaseTestClass:
     fake = Faker()
-    BASE_URL = "http://localhost:8080"
+    BASE_URL = "http://backend-api:8080"
 
     @pytest.fixture(scope="class")
     def session(self):

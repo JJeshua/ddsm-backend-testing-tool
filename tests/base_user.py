@@ -8,7 +8,7 @@ import os
 class BaseUser:
     def __init__(self):
         self.fake = Faker()
-        self.BASE_URL = "http://localhost:8080"
+        self.BASE_URL = "http://backend-api:8080"
         self.session = requests.Session()
         self.session_storage = {
             "email": self.fake.email(),

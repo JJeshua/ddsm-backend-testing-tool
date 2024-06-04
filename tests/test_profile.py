@@ -213,5 +213,5 @@ class TestProfile(BaseTestClass):
         response = session.get(url, cookies=session.cookies.get_dict())
 
         assert response.status_code == 404, self.buildErrorMessage(
-            response.status_code, response.content
+            session.cookies.get_dict(), session.cookies.get_dict()
         )

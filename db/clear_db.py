@@ -9,7 +9,7 @@ def clear_all_collections(db):
 
 print("Clearing MongoDB.")
 
-mongo_client = pymongo.MongoClient("mongodb://localhost:27017")
+mongo_client = pymongo.MongoClient("mongodb://db:27017")
 db_name = "DuckPond"
 
 # Connect to the database
